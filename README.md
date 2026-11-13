@@ -233,3 +233,8 @@ JSON
    │
    ▼
 Browser / AJAX
+
+
+// Hasta este punto esta finalizada la primer version del proyecto utilizando sql server
+// ahora se procedera con la conversion de los servicios asi como de la conexion a mysql para ser subido
+// posteriormente a Hostinger

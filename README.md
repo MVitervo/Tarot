@@ -234,6 +234,9 @@ JSON
    ▼
 Browser / AJAX
 
+ramas:
+tarot (original con sql server)
+tarotmysql (nueva usando mysql)
 
 // Hasta este punto esta finalizada la primer version del proyecto utilizando sql server
 // ahora se procedera con la conversion de los servicios asi como de la conexion a mysql para ser subido

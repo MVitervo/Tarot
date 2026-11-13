@@ -9,26 +9,28 @@ class LoginService
         $this->conn = $conn;
     }
 
-    public function login(Login $login)
+    public function login(Login $login): array
     {
         try {
-            $queryValidateUser = "
-                SELECT Username
-                FROM usernames
-                WHERE Username = :Username
-                AND Password = :Password
-            ";
 
-            $stmtValidateUser = $this->conn->prepare($queryValidateUser);
+            // Buscar únicamente el usuario y su contraseña almacenada
+            $query = "SELECT Username, Password
+                      FROM usernames
+                      WHERE Username = :Username";
 
-            $stmtValidateUser->bindValue(':Username', $login->username, PDO::PARAM_STR);
-            $stmtValidateUser->bindValue(':Password', $login->password, PDO::PARAM_STR);
+            $stmt = $this->conn->prepare($query);
 
-            $stmtValidateUser->execute();
+            $stmt->execute([
+                ':Username' => $login->username
+            ]);
 
-            $resultValidateUser = $stmtValidateUser->fetch(PDO::FETCH_ASSOC);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if (!$resultValidateUser) {
+            // Verificar que el usuario exista y que la contraseña coincida
+            if (
+                !$user ||
+                !password_verify($login->password, $user['Password'])
+            ) {
                 return [
                     'status' => 'error',
                     'message' => 'Usuario o contraseña incorrectos.'
@@ -50,8 +52,7 @@ class LoginService
 
             // Guardar la identidad autenticada.
             $_SESSION['admin_authenticated'] = true;
-            $_SESSION['admin_username'] = $resultValidateUser['Username'];
-
+            $_SESSION['admin_username'] = $user['Username'];
             // Registrar el momento de la última actividad.
             $_SESSION['last_activity'] = time();
 
@@ -61,9 +62,11 @@ class LoginService
             ];
         } catch (PDOException $e) {
 
+            error_log($e->getMessage());
+
             return [
                 'status' => 'error',
-                'message' => 'Error de base de datos.'
+                'message' => 'Ocurrió un error al intentar iniciar sesión.'
             ];
         }
     }

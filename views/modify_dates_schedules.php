@@ -219,7 +219,6 @@ requireAdmin();
     $('#btnLogout').addClass('inline-flex');
 
     $(function() {
-        // findAppointments();
         $('.hourAvailable').select2({
             theme: 'bootstrap-5',
             placeholder: 'Seleccionar fecha',
@@ -253,7 +252,6 @@ requireAdmin();
                 fieldSchedules.append(`<option value='${element.Schedule}'>${element.Schedule}</option>`);
             });
         } else {
-            // modalError(schedules.message);
             if (handleAjaxError(schedules)) return;
             modalError(schedules.message);
 

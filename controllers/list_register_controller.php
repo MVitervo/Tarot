@@ -1,19 +1,5 @@
 <?php
 
-
-
-// implementacion de factory
-// class AppointmentFactory2
-// {
-//     public function createFromRequest(array $data): Appointment
-//     {
-//         $appointment = new Appointment(); // esta es una instancia
-//         $appointment->id = $data['id'] ?? ''; // esta es una asignacion
-
-//         return $appointment;
-//     }
-// }
-
 class listRegisterController {
     private ListRegisterService $listRegister;
     private AppointmentFactory $appointmentFactory; // esta es una propiedad tipada

@@ -2,7 +2,6 @@
 <?php
 
 // Tiempo máximo de inactividad: 30 minutos
-// const SESSION_IDLE_TIMEOUT = 1800;
 const SESSION_IDLE_TIMEOUT = 1800;
 
 function requireAdmin(): void

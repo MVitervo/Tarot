@@ -26,18 +26,8 @@ class AppointmentSchedulesController
 
     public function saveAppointment()
     {
-        // $date = $_GET['date'] ?? '';
-        // $appointment = new Appointment();
 
         $appointment = $this->appointmentFactory->createFromRequest($_POST);
-        /*
-        $this->appointment->name = $_POST['name'] ?? '';
-        $this->appointment->lastname = $_POST['lastname'] ?? '';
-        $this->appointment->email = $_POST['email'] ?? '';
-        $this->appointment->phone = $_POST['phone'] ?? '';
-        $this->appointment->date = $_POST['date'] ?? '';
-        $this->appointment->schedule = $_POST['schedule'] ?? '';
-        */
 
         echo json_encode(
             $this->service->saveAppointment($appointment)

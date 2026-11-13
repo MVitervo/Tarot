@@ -146,12 +146,6 @@ class ListRegisterService
                                 ,LastEditDt = GETDATE()
                                 WHERE Id = :id";
 
-            /*
-                                ,NameLastname AS [nameLastname]
-                                ,ZodiacSign AS [zodiacSign]
-                                ,Nationality AS [nationality]
-                                */
-
             $stmtEditRegister = $this->conn->prepare($queryEditRegister);
             $stmtEditRegister->bindParam(':nameLastname', $appointment->nameLastname, PDO::PARAM_STR);
             $stmtEditRegister->bindParam(':zodiacSign', $appointment->zodiacSign, PDO::PARAM_STR);

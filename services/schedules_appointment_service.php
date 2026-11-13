@@ -23,9 +23,6 @@ class SchedulesService
         try {
 
             $this->conn->beginTransaction();
-
-            // continuar lo que debo de hacer es traerme primero todos los horarios
-            // despues buscar que horarios estan ocupados para deshabilitarlos
             $querySchedules = "SELECT * FROM Schedules";
 
             $stmtSchedules = $this->conn->prepare($querySchedules);

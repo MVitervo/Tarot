@@ -3,18 +3,6 @@ require_once __DIR__ . '/../auth.php';
 requireAdmin();
 ?>
 
-
-<!-- <button class="btnBack2" onclick="loadPage('/login')">
-    <svg xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        class="size-6">
-        <path fill-rule="evenodd"
-            d="M9.53 2.47a.75.75 0 0 1 0 1.06L4.81 8.25H15a6.75 6.75 0 0 1 0 13.5h-3a.75.75 0 0 1 0-1.5h3a5.25 5.25 0 1 0 0-10.5H4.81l4.72 4.72a.75.75 0 1 1-1.06 1.06l-6-6a.75.75 0 0 1 0-1.06l6-6a.75.75 0 0 1 1.06 0Z"
-            clip-rule="evenodd" />
-    </svg>
-</button> -->
-
 <div class="form-panel w-11/12 mx-auto rounded-2xl border border-gold/40
     p-4 shadow-gold transition-colors duration-300 sm:p-6 lg:p-8 mb-4">
 
@@ -140,50 +128,9 @@ requireAdmin();
                 emptyTable: 'No hay datos disponibles'
             },
             ordering: false,
-            // dom: '<"row mb-2"<"col-md-5"f><"col-md-7 d-flex justify-content-end switch"B>>rt<"row"<"col-md-6"i><"col-md-6 d-flex justify-content-end"p>>',
-            /*
-            buttons: [{
-                    text: 'Imprimir <span class="material-symbols-rounded" style="font-size:20px;top:5px;">print</span>',
-                    className: 'registrosDataTables',
-                    action: function(e, dt, node, config) {
-                        etiquetasMultiples();
-                    }
-                },
-                {
-                    text: 'Filtros <span class="material-symbols-rounded" style="left: 0 !important; font-size:20px;top:5px;">filter_alt_off</span>',
-                    className: 'btn btn-secondary btn-filtro-fechas',
-                    action: function(e, dt, node, config) {
-                        $('#modal_filtro_fechas').modal('show');
-                    }
-                },
-                {
-                    extend: 'colvis',
-                    text: 'Mostrar'
-                },
-                {
-                    extend: 'excelHtml5',
-                    text: 'Excel',
-                    orientation: 'landscape',
-                    filename: 'Moldeo',
-                    title: 'Moldeo',
-                },
-                {
-                    extend: 'pdfHtml5',
-                    title: 'Moldeo',
-                    text: 'PDF',
-                    className: 'btn-danger',
-                },
-            ],
-            */
-            // colReorder: true,
-            // keys: false,
             ajax: {
                 method: 'GET',
                 url: '/api/listRegister',
-                // data: function(value) {
-                //     value.fecha_inicial = $('#fecha_inicial').val() || '2000-01-01';
-                //     value.fecha_final = $('#fecha_final').val() || new Date().toISOString().split('T')[0];
-                // },
                 dataSrc: 'data' // Indica que los datos están en la raíz del JSON
             },
             // los valores que recibira data estan pendientes de la tabla en la bd
@@ -215,30 +162,13 @@ requireAdmin();
                     }
                 },
                 {
-                    data: 'lastEditDt',
-                    // render: function(data, type, row) {
-                    //     return `
-                    //         <div class="registrosDataTables" style="display: flex;">
-                    //             ${data}
-                    //         </div>
-                    //     `;
-                    // }
+                    data: 'lastEditDt'
                 },
                 {
                     data: 'options'
                 }
             ],
-            // order: [[0, 'desc']],
-            // rowGroup: {
-            //     dataSrc: 'folio' // Aquí le indicas que agrupe por "folio"
-            // },
             initComplete: function(settings, json) {
-                // let windowHeight = $(window).height();
-                // let pagelen = (windowHeight * 0.64) / 29;
-                // $('#tabla_historial').DataTable().page.len(pagelen).draw();
-                // $('.loader').remove();
-                // $('.tab-1').fadeIn();
-                // $('.registrosDataTables').eq(0).css('display', ''); // remueve el display: flex solo de la primera fila
             }
         });
     }

@@ -1,4 +1,6 @@
+
 <?php
+
 class ModifyDatesSchedulesService
 {
     private PDO $conn;
@@ -11,14 +13,13 @@ class ModifyDatesSchedulesService
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
-        // utilizar esta variable para guardar el dato donde sea necesario
+
         $this->username = $_SESSION['admin_username'] ?? '';
     }
 
     public function getDates()
     {
         try {
-            $this->conn->beginTransaction();
             $queryGetDates = "SELECT * FROM calendar_exceptions";
 
             $stmtGetDates = $this->conn->prepare($queryGetDates);
@@ -26,14 +27,12 @@ class ModifyDatesSchedulesService
 
             $resultGetDates = $stmtGetDates->fetchAll(PDO::FETCH_ASSOC);
 
-            $this->conn->commit();
-
             return [
                 'status' => 'success',
                 'data' => $resultGetDates
             ];
+
         } catch (PDOException $e) {
-            $this->conn->rollBack();
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -41,9 +40,9 @@ class ModifyDatesSchedulesService
     public function getspecificDate(ModifyDatesSchedules $specificDate)
     {
         try {
-            $this->conn->beginTransaction();
-
-            $queryGetSchedules = "SELECT * FROM calendar_exceptions WHERE Date = :Date";
+            $queryGetSchedules = "SELECT *
+                                  FROM calendar_exceptions
+                                  WHERE `Date` = :Date";
 
             $stmtGetSchedules = $this->conn->prepare($queryGetSchedules);
             $stmtGetSchedules->bindParam(':Date', $specificDate->date, PDO::PARAM_STR);
@@ -51,7 +50,6 @@ class ModifyDatesSchedulesService
 
             $resultGetSchedules = $stmtGetSchedules->fetchAll(PDO::FETCH_ASSOC);
 
-            $this->conn->commit();
             if (!empty($resultGetSchedules)) {
                 return [
                     'status' => 'success',
@@ -63,8 +61,8 @@ class ModifyDatesSchedulesService
                     'data' => 'No hay datos'
                 ];
             }
+
         } catch (PDOException $e) {
-            $this->conn->rollBack();
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -72,9 +70,9 @@ class ModifyDatesSchedulesService
     public function getActiveAppointment(ModifyDatesSchedules $specificDate)
     {
         try {
-            $this->conn->beginTransaction();
-
-            $queryGetAppointment = "SELECT * FROM appointment WHERE Date = :Date";
+            $queryGetAppointment = "SELECT *
+                                    FROM appointment
+                                    WHERE `Date` = :Date";
 
             $stmtGetAppointment = $this->conn->prepare($queryGetAppointment);
             $stmtGetAppointment->bindParam(':Date', $specificDate->date, PDO::PARAM_STR);
@@ -82,7 +80,6 @@ class ModifyDatesSchedulesService
 
             $resultGetAppointment = $stmtGetAppointment->fetchAll(PDO::FETCH_ASSOC);
 
-            $this->conn->commit();
             if (!empty($resultGetAppointment)) {
                 return [
                     'status' => 'success',
@@ -94,8 +91,8 @@ class ModifyDatesSchedulesService
                     'data' => 'No hay datos'
                 ];
             }
+
         } catch (PDOException $e) {
-            $this->conn->rollBack();
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -103,9 +100,9 @@ class ModifyDatesSchedulesService
     public function searchAppointmentDates(ModifyDatesSchedules $modifyDatesSchedules)
     {
         try {
-            $this->conn->beginTransaction();
-            $querySearchAppointments = "SELECT Id, NameLastname FROM appointment
-                                        WHERE Date = :Date";
+            $querySearchAppointments = "SELECT Id, NameLastname
+                                        FROM appointment
+                                        WHERE `Date` = :Date";
 
             $stmtSearchAppointments = $this->conn->prepare($querySearchAppointments);
             $stmtSearchAppointments->bindParam(':Date', $modifyDatesSchedules->date, PDO::PARAM_STR);
@@ -122,8 +119,6 @@ class ModifyDatesSchedulesService
                 $resultSearchAppointments[] = $register;
             }
 
-            $this->conn->commit();
-
             if (!empty($resultSearchAppointments)) {
                 return [
                     'status' => 'success',
@@ -135,8 +130,8 @@ class ModifyDatesSchedulesService
                     'message' => 'No hay citas'
                 ];
             }
+
         } catch (PDOException $e) {
-            $this->conn->rollBack();
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
@@ -144,9 +139,10 @@ class ModifyDatesSchedulesService
     public function searchAppointmentHourDates(ModifyDatesSchedules $modifyDatesSchedules)
     {
         try {
-            $this->conn->beginTransaction();
-            $querySearchAppointments = "SELECT Id, NameLastname FROM appointment
-                                        WHERE Date = :Date AND Schedule = :Schedule";
+            $querySearchAppointments = "SELECT Id, NameLastname
+                                        FROM appointment
+                                        WHERE `Date` = :Date
+                                        AND Schedule = :Schedule";
 
             $stmtSearchAppointments = $this->conn->prepare($querySearchAppointments);
             $stmtSearchAppointments->bindParam(':Date', $modifyDatesSchedules->date, PDO::PARAM_STR);
@@ -164,8 +160,6 @@ class ModifyDatesSchedulesService
                 $resultSearchAppointments[] = $register;
             }
 
-            $this->conn->commit();
-
             if (!empty($resultSearchAppointments)) {
                 return [
                     'status' => 'success',
@@ -177,22 +171,24 @@ class ModifyDatesSchedulesService
                     'message' => 'No hay citas'
                 ];
             }
+
         } catch (PDOException $e) {
-            $this->conn->rollBack();
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
-    public function availableDisableDate(ModifyDatesSchedules $modifyDatesSchedules) // el modelo de ya existe en el controlador
+    public function availableDisableDate(ModifyDatesSchedules $modifyDatesSchedules)
     {
-        // revisar todas las personas con esa fecha y avisar
         try {
             $this->conn->beginTransaction();
+
             $username = $this->username;
 
-            // primero se buscara si es que esa fecha ya existe
-            $queryValidateDate = "SELECT * FROM calendar_exceptions
-                                WHERE Date = :Date";
+            // Buscar si la fecha ya existe
+            $queryValidateDate = "SELECT `Date`
+                                  FROM calendar_exceptions
+                                  WHERE `Date` = :Date
+                                  LIMIT 1";
 
             $stmtValidate = $this->conn->prepare($queryValidateDate);
             $stmtValidate->bindParam(':Date', $modifyDatesSchedules->date, PDO::PARAM_STR);
@@ -200,33 +196,34 @@ class ModifyDatesSchedulesService
 
             $resultValidateDates = $stmtValidate->fetch(PDO::FETCH_ASSOC);
 
-            if (!empty($resultValidateDates['Date'])) {
-                // validacion
+            if ($resultValidateDates) {
 
-                // si ya existe entonces se hara una actualizacion del registro
-                $queryupdateRegister = "UPDATE calendar_exceptions 
+                // Actualizar el registro existente
+                $queryUpdateRegister = "UPDATE calendar_exceptions
                                         SET StatusDate = :StatusDate,
-                                        LastEditBy = :LastEditBy
-                                        WHERE Date = :Date";
+                                            LastEditBy = :LastEditBy
+                                        WHERE `Date` = :Date";
 
-                $stmtUpdateRegister = $this->conn->prepare($queryupdateRegister);
+                $stmtUpdateRegister = $this->conn->prepare($queryUpdateRegister);
                 $stmtUpdateRegister->bindParam(':StatusDate', $modifyDatesSchedules->statusDate, PDO::PARAM_STR);
-                $stmtUpdateRegister->bindParam(':Date', $modifyDatesSchedules->date, PDO::PARAM_STR);
                 $stmtUpdateRegister->bindParam(':LastEditBy', $username, PDO::PARAM_STR);
+                $stmtUpdateRegister->bindParam(':Date', $modifyDatesSchedules->date, PDO::PARAM_STR);
                 $stmtUpdateRegister->execute();
+
             } else {
-                // si no existe entonces se hara una insercion del registro
+
+                // Insertar un nuevo registro
                 $queryInsertRegister = "INSERT INTO calendar_exceptions (
-                                        Date
-                                        ,StatusDate
-                                        ,LastEditBy
-                                        ,LastEditDt
+                                            `Date`,
+                                            StatusDate,
+                                            LastEditBy,
+                                            LastEditDt
                                         )
                                         VALUES (
-                                        :Date
-                                        ,:StatusDate
-                                        ,:LastEditBy
-                                        ,GETDATE()
+                                            :Date,
+                                            :StatusDate,
+                                            :LastEditBy,
+                                            NOW()
                                         )";
 
                 $stmtInsertRegister = $this->conn->prepare($queryInsertRegister);
@@ -240,24 +237,32 @@ class ModifyDatesSchedulesService
 
             return [
                 'status' => 'success',
-                'message' => 'fecha actualizada'
+                'message' => 'Fecha actualizada'
             ];
+
         } catch (PDOException $e) {
-            $this->conn->rollBack();
+
+            if ($this->conn->inTransaction()) {
+                $this->conn->rollBack();
+            }
+
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }
 
     public function availableDisableHour(ModifyDatesSchedules $modifyDatesSchedules)
     {
-        // revisar si hay una persona con esa fecha y hora para avisar
         try {
             $this->conn->beginTransaction();
+
             $username = $this->username;
 
-            // primero se buscara si es que esa fecha ya existe
-            $queryValidateDate = "SELECT * FROM calendar_exceptions
-                                WHERE Date = :Date AND Hour = :Hour";
+            // Buscar si la fecha y hora ya existen
+            $queryValidateDate = "SELECT `Date`
+                                  FROM calendar_exceptions
+                                  WHERE `Date` = :Date
+                                  AND `Hour` = :Hour
+                                  LIMIT 1";
 
             $stmtValidateDate = $this->conn->prepare($queryValidateDate);
             $stmtValidateDate->bindParam(':Date', $modifyDatesSchedules->date, PDO::PARAM_STR);
@@ -266,39 +271,41 @@ class ModifyDatesSchedulesService
 
             $resultValidateDates = $stmtValidateDate->fetch(PDO::FETCH_ASSOC);
 
+            if ($resultValidateDates) {
 
-
-            if (!empty($resultValidateDates['Date'])) {
-                // si ya existe entonces se hara una actulizacion del registro
-                $queryupdateRegister = "UPDATE TOP (1) calendar_exceptions 
+                // Actualizar el registro existente
+                $queryUpdateRegister = "UPDATE calendar_exceptions
                                         SET StatusHour = :StatusHour,
-                                        LastEditBy = :LastEditBy
-                                        WHERE Date = :Date AND Hour = :Hour";
+                                            LastEditBy = :LastEditBy
+                                        WHERE `Date` = :Date
+                                        AND `Hour` = :Hour
+                                        LIMIT 1";
 
-                $stmtUpdateRegister = $this->conn->prepare($queryupdateRegister);
+                $stmtUpdateRegister = $this->conn->prepare($queryUpdateRegister);
                 $stmtUpdateRegister->bindParam(':Date', $modifyDatesSchedules->date, PDO::PARAM_STR);
                 $stmtUpdateRegister->bindParam(':StatusHour', $modifyDatesSchedules->statusHour, PDO::PARAM_STR);
                 $stmtUpdateRegister->bindParam(':Hour', $modifyDatesSchedules->hour, PDO::PARAM_STR);
                 $stmtUpdateRegister->bindParam(':LastEditBy', $username, PDO::PARAM_STR);
                 $stmtUpdateRegister->execute();
-                // continuar debo de cambiar el tipo de dato en la columna Hour de sql server para que funcione esto de aqui
+
             } else {
-                // si no existe entonces se hara una insercion del registro
+
+                // Insertar un nuevo registro
                 $queryInsertRegister = "INSERT INTO calendar_exceptions (
-                                        Date
-                                        ,StatusDate
-                                        ,Hour
-                                        ,StatusHour
-                                        ,LastEditBy
-                                        ,LastEditDt
+                                            `Date`,
+                                            StatusDate,
+                                            `Hour`,
+                                            StatusHour,
+                                            LastEditBy,
+                                            LastEditDt
                                         )
                                         VALUES (
-                                        :Date
-                                        ,:StatusDate
-                                        ,:Hour
-                                        ,:StatusHour
-                                        ,:LastEditBy
-                                        ,GETDATE()
+                                            :Date,
+                                            :StatusDate,
+                                            :Hour,
+                                            :StatusHour,
+                                            :LastEditBy,
+                                            NOW()
                                         )";
 
                 $stmtInsertRegister = $this->conn->prepare($queryInsertRegister);
@@ -316,8 +323,13 @@ class ModifyDatesSchedulesService
                 'status' => 'success',
                 'message' => 'Hora actualizada'
             ];
+
         } catch (PDOException $e) {
-            $this->conn->rollBack();
+
+            if ($this->conn->inTransaction()) {
+                $this->conn->rollBack();
+            }
+
             return ['status' => false, 'message' => $e->getMessage()];
         }
     }

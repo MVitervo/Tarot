@@ -1,6 +1,5 @@
-<?php
 
-// header('Content-Type: application/json'); // esta linea no es necesario en el servicio solo en el controlador
+<?php
 
 class SchedulesService
 {
@@ -14,7 +13,7 @@ class SchedulesService
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
-        // utilizar esta variable para guardar el dato donde sea necesario
+
         $this->username = $_SESSION['admin_username'] ?? '';
     }
 
@@ -22,39 +21,40 @@ class SchedulesService
     {
         try {
 
-            $this->conn->beginTransaction();
             $querySchedules = "SELECT * FROM Schedules";
 
             $stmtSchedules = $this->conn->prepare($querySchedules);
-            // $stmtSchedules->bindParam(':dateSelected', $date, PDO::PARAM_STR);
             $stmtSchedules->execute();
 
             $resultSchedules = $stmtSchedules->fetchAll(PDO::FETCH_ASSOC);
-
-            $this->conn->commit();
 
             return [
                 'status' => 'success',
                 'data' => $resultSchedules
             ];
         } catch (PDOException $e) {
-            $this->conn->rollBack();
-            return ['status' => false, 'message' => $e->getMessage()];
+
+            return [
+                'status' => false,
+                'message' => $e->getMessage()
+            ];
         }
-        // como se esta usando una inyeccion de dependencias no es necesario destruir la conexion, pero php liberara
-        // automaticamente al terminar la peticion
-        // finally {
-        //     $this->conn = null;
-        // }
     }
 
-    public function saveAppointment(Appointment $appointment) // el modelo de Appointment ya existe en el index, por lo tanto, ya lo conoce
+    public function saveAppointment(Appointment $appointment)
     {
         try {
+
             $this->conn->beginTransaction();
+
             $username = $this->username;
-            // falta la validacion de que no este ocupado esta fecha con el horario para que no haya repetidos
-            $queryValidationAppointment = 'SELECT * FROM appointment WHERE Date = :date AND Schedule = :Schedule';
+
+            // Validar que la fecha y el horario no estén ocupados
+            $queryValidationAppointment = "SELECT Id
+                                           FROM appointment
+                                           WHERE `Date` = :date
+                                           AND Schedule = :Schedule
+                                           LIMIT 1";
 
             $stmtValidationAppointment = $this->conn->prepare($queryValidationAppointment);
             $stmtValidationAppointment->bindParam(':date', $appointment->date, PDO::PARAM_STR);
@@ -64,35 +64,35 @@ class SchedulesService
             $resultValidationAppointment = $stmtValidationAppointment->fetch(PDO::FETCH_ASSOC);
 
             if ($resultValidationAppointment) {
-                throw new Exception('No es posible hacer la cita, esta fecha y hora ya estan ocupadas');
+                throw new Exception('No es posible hacer la cita, esta fecha y hora ya están ocupadas');
             }
 
-
+            // Insertar la cita
             $querySaveAppointment = "INSERT INTO appointment (
-                NameLastname
-                ,zodiacSign
-                ,nationality
-                ,Email
-                ,Phone
-                ,Date
-                ,Schedule
-                ,LastEditBy
-                ,LastEditDt
-                ) 
-                VALUES
-                (
-                :NameLastname
-                ,:zodiacSign
-                ,:nationality
-                ,:Email
-                ,:Phone
-                ,:Date
-                ,:Schedule
-                ,:LastEditBy
-                ,GETDATE()
-                )";
+                                        NameLastname,
+                                        ZodiacSign,
+                                        Nationality,
+                                        Email,
+                                        Phone,
+                                        `Date`,
+                                        Schedule,
+                                        LastEditBy,
+                                        LastEditDt
+                                    )
+                                    VALUES (
+                                        :NameLastname,
+                                        :zodiacSign,
+                                        :nationality,
+                                        :Email,
+                                        :Phone,
+                                        :Date,
+                                        :Schedule,
+                                        :LastEditBy,
+                                        NOW()
+                                    )";
 
             $stmtSaveAppointment = $this->conn->prepare($querySaveAppointment);
+
             $stmtSaveAppointment->bindParam(':NameLastname', $appointment->nameLastname, PDO::PARAM_STR);
             $stmtSaveAppointment->bindParam(':zodiacSign', $appointment->zodiacSign, PDO::PARAM_STR);
             $stmtSaveAppointment->bindParam(':nationality', $appointment->nationality, PDO::PARAM_STR);
@@ -101,24 +101,35 @@ class SchedulesService
             $stmtSaveAppointment->bindParam(':Date', $appointment->date, PDO::PARAM_STR);
             $stmtSaveAppointment->bindParam(':Schedule', $appointment->schedule, PDO::PARAM_STR);
             $stmtSaveAppointment->bindParam(':LastEditBy', $username, PDO::PARAM_STR);
-            
 
-            // $resultSaveAppointment = $stmtSaveAppointment->fetch(PDO::FETCH_ASSOC); // esta linea aplica solo los SELECT
+            $stmtSaveAppointment->execute();
 
-            if ($stmtSaveAppointment->execute()) {
-                $this->conn->commit();
-                return [
-                    'status' => 'success',
-                    'message' => 'Cita agendada con exito! Te contactara el numero 656 102 9683'
-                ];
+            $this->conn->commit();
+
+            return [
+                'status' => 'success',
+                'message' => 'Cita agendada con éxito! Te contactará el número 656 102 9683'
+            ];
+        } catch (Exception $e) {
+
+            if ($this->conn->inTransaction()) {
+                $this->conn->rollBack();
             }
 
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
         } catch (PDOException $e) {
-            $this->conn->rollBack();
-            return ['status' => 'error', 'message' => "Error de base de datos " . $e->getMessage()];
-        } catch (Exception $e) {
-            // $this->conn->rollBack();
-            return ['status' => 'error', 'message' => $e->getMessage()];
+
+            if ($this->conn->inTransaction()) {
+                $this->conn->rollBack();
+            }
+
+            return [
+                'status' => 'error',
+                'message' => "Error de base de datos " . $e->getMessage()
+            ];
         }
     }
 }

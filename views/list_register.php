@@ -110,7 +110,7 @@ requireAdmin();
     </p>
 </div>
 
-
+<link rel="stylesheet" href="/css/datatables.css">
 <script>
     $(function() {
         loadRegister();

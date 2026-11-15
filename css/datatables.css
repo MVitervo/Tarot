@@ -1,0 +1,86 @@
+/* ========================================
+   DATATABLES - MODO CLARO
+======================================== */
+
+/* Texto general de los controles */
+.dt-container {
+    color: #392b3c;
+}
+
+/* Search y Entries per page */
+.dt-container .dt-search label,
+.dt-container .dt-length label {
+    color: #392b3c;
+}
+
+/* Showing 1 to 1 of 1 entry */
+.dt-container .dt-info {
+    color: #392b3c;
+}
+
+/* Input de búsqueda */
+.dt-container .dt-search input {
+    background-color: #fffcf7;
+    border: 1px solid #c69a5b;
+    border-radius: 8px;
+    color: #392b3c;
+}
+
+/* Select de cantidad de registros */
+.dt-container .dt-length select {
+    background-color: #fffcf7;
+    border: 1px solid #c69a5b;
+    border-radius: 8px;
+    color: #392b3c;
+}
+
+/* ========================================
+   DATATABLES - MODO OSCURO
+======================================== */
+
+.dark .dt-container {
+    color: #f7efe3;
+}
+
+.dark .dt-container .dt-search label,
+.dark .dt-container .dt-length label,
+.dark .dt-container .dt-info {
+    color: #f7efe3;
+}
+
+/* Input de búsqueda */
+.dark .dt-container .dt-search input {
+    background-color: #17131f;
+    border-color: #a9824d;
+    color: #f7efe3;
+}
+
+/* Select de cantidad de registros */
+.dark .dt-container .dt-length select {
+    background-color: #17131f;
+    border-color: #a9824d;
+    color: #f7efe3;
+}
+
+/* Placeholder */
+.dt-container .dt-search input::placeholder {
+    color: #9a897c;
+}
+
+.dark .dt-container .dt-search input::placeholder {
+    color: #a99eae;
+}
+
+/* Focus */
+.dt-container .dt-search input:focus,
+.dt-container .dt-length select:focus {
+    outline: none;
+    border-color: #a87943;
+    box-shadow: 0 0 0 3px rgba(198, 154, 91, .20);
+}
+
+.dark .dt-container .dt-search input:focus,
+.dark .dt-container .dt-length select:focus {
+    border-color: #c69a5b;
+    box-shadow: 0 0 0 3px rgba(198, 154, 91, .25);
+}

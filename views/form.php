@@ -80,7 +80,7 @@
         <span class="text-gold">✦</span><span class="textButton">GUARDAR CITA</span><span class="text-gold">✦</span>
     </button>
     <p id="formMessage" class="mt-3 hidden text-center text-sm" role="status"></p>
-    <p>Una vez agendada una cita se contactara contigo el siguiente numero 656 102 9683</p>
+    <p class="mt-3 text-center">Una vez agendada una cita se contactara contigo el siguiente numero 656 102 9683</p>
     <div class="mt-7 flex items-center justify-center gap-4 text-gold">
         <div class="ornament flex-1"></div>
         <span class="text-xl">☾ ● ☽</span>

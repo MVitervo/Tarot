@@ -10,10 +10,10 @@ $password = "03210O9I";
 */
 
 
-$host = "VITERVO\SQLEXPRESS";
-$dbname = "LimpiezaAlfombras";
-$username = ""; // cuando no es necesario un usuario ni la contraseña entonces esto no es necesario
-$password = "";
+// $host = "VITERVO\SQLEXPRESS";
+// $dbname = "LimpiezaAlfombras";
+// $username = ""; // cuando no es necesario un usuario ni la contraseña entonces esto no es necesario
+// $password = "";
 
 
 // $host = "localhost\SQLEXPRESS";
@@ -32,22 +32,22 @@ $port = 3307;
 $charset = "utf8mb4";
 */
 
-/*
-mysql
-$host = "localhost";
-$db   = "LimpiezaAlfombra";
-$user = "root";      // usuario por defecto en XAMPP
-$pass = "";          // contraseña vacía por defecto
-$port = 3306;
-$charset = "utf8mb4";
-*/
 
-// $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
-$dsn = "sqlsrv:Server=$host;Database=$dbname";
+// mysql
+$host = "localhost";
+$db   = "Tarot";
+$username = "root";      // usuario por defecto en XAMPP
+$password = "";          // contraseña vacía por defecto
+$port = 3307;
+$charset = "utf8mb4";
+
+
+$dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
+// $dsn = "sqlsrv:Server=$host;Database=$dbname";
 
 try {
-    // $conn = new PDO($dsn, $username, $password); // trabajo
-    $conn = new PDO($dsn, null, null); // local
+    $conn = new PDO($dsn, $username, $password); // trabajo
+    // $conn = new PDO($dsn, null, null); // local
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 

@@ -125,6 +125,88 @@ VALUES ('miguel', '$2y$10$HDE/UklDjf7eOFYKn0ljROCRe2KIJr9z4CkBiuMQOlSbqDG/eLTWG'
 miguel ovretiv
 antoniosnt antoniocrow
 
+CREATE TABLE calendar_exceptions(
+	[Id] [int] IDENTITY(1,1),
+	[Date] [date],
+	[StatusDate] [bit],
+	[Hour] [varchar](100),
+	[StatusHour] [bit],
+	[LastEditBy] [varchar](100),
+	[LastEditDt] [datetime]
+)
+
+/*
+mysql equivalente
+
+CREATE TABLE appointment (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    NameLastname VARCHAR(100),
+    ZodiacSign VARCHAR(100),
+    Nationality VARCHAR(100),
+    Email VARCHAR(200),
+    Phone VARCHAR(20),
+    `Date` DATE,
+    Schedule VARCHAR(100),
+    LastEditBy VARCHAR(100),
+    LastEditDt DATETIME
+) ENGINE=InnoDB;
+
+CREATE TABLE schedules (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Schedule VARCHAR(100),
+    LastEditBy VARCHAR(100),
+    LastEditDt DATETIME
+) ENGINE=InnoDB;
+
+INSERT INTO schedules (Schedule)
+VALUES
+    ('8:00 AM - 10:00 AM'),
+    ('10:00 AM - 12:00 PM'),
+    ('12:00 PM - 2:00 PM'),
+    ('2:00 PM - 4:00 PM'),
+    ('4:00 PM - 6:00 PM'),
+    ('6:00 PM - 8:00 PM');
+
+CREATE TABLE usernames (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(100),
+    `Password` VARCHAR(255),
+    LastEditBy VARCHAR(100),
+    LastEditDt DATETIME
+) ENGINE=InnoDB;
+
+INSERT INTO usernames (
+    Username,
+    `Password`,
+    LastEditBy,
+    LastEditDt
+)
+VALUES
+    (
+        'miguel',
+        '$2y$10$HDE/UklDjf7eOFYKn0ljROCRe2KIJr9z4CkBiuMQOlSbqDG/eLTWG',
+        'miguel.vitervo',
+        NOW()
+    ),
+    (
+        'antoniosnt',
+        '$2y$10$SBLOoYiKZEFCpC94OQ0Wi.sWOfbgh/O4V9n6yf3LXHRqQDHBYTsjy',
+        'miguel.vitervo',
+        NOW()
+    );
+
+CREATE TABLE calendar_exceptions (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    `Date` DATE,
+    StatusDate TINYINT(1),
+    `Hour` VARCHAR(100),
+    StatusHour TINYINT(1),
+    LastEditBy VARCHAR(100),
+    LastEditDt DATETIME
+) ENGINE=InnoDB;
+
+*/
+
 la idea es que cuando la persona escoja un dia ire a revisar la tabla de appointment para saber
 que horarios deshabilitar que seran los que ya exista un registro para ese dia esos se mostraran pero
 deshabilitados

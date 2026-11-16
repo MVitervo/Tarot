@@ -151,14 +151,14 @@ CREATE TABLE appointment (
     LastEditDt DATETIME
 ) ENGINE=InnoDB;
 
-CREATE TABLE schedules (
+CREATE TABLE Schedules (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     Schedule VARCHAR(100),
     LastEditBy VARCHAR(100),
     LastEditDt DATETIME
 ) ENGINE=InnoDB;
 
-INSERT INTO schedules (Schedule)
+INSERT INTO Schedules (Schedule)
 VALUES
     ('8:00 AM - 10:00 AM'),
     ('10:00 AM - 12:00 PM'),
